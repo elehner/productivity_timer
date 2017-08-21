@@ -2,20 +2,41 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Time from '../components/Time';
-import { PLAY } from '../actions.js';
+import { PLAY, period_finish } from '../actions.js';
+
+const countdownCalc = (current_period, timer_settings) => {
+  return current_period.break
+    ? (current_period.interval % timer_settings.long_break_interval) === 0
+      ? timer_settings.long_break_length
+      : timer_settings.break_length
+    : timer_settings.length;
+};
 
 const mapStateToProps = state => {
   let time_offset_in_seconds = Math.round(state.time_offset / 1000);
+  let countdownTo = countdownCalc(state.current_period, state.timer_settings);
   return {
     start_time: state.start_time,
-    period: state.period,
     elapsed_seconds: time_offset_in_seconds,
     time_offset_in_seconds: time_offset_in_seconds,
-    timer_state: state.timer_state
+    timer_state: state.timer_state,
+    countdown_to: countdownTo
   };
 };
 
-class Timer extends Component {
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  // First creat the new object
+  const { dispatch } = dispatchProps;
+  let mergedProps = {
+    period_finish: () => {
+      dispatch(period_finish(new Date()));
+    }
+  };
+
+  return Object.assign(mergedProps, stateProps, ownProps);
+};
+
+class CountdownTimer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -81,22 +102,28 @@ class Timer extends Component {
     let new_state = Object.assign({}, this.state, {
       elapsed_seconds: elapsed_seconds + this.props.time_offset_in_seconds
     });
-    this.setState(new_state);
+    if (this.props.countdown_to <= this.state.elapsed_seconds) {
+      this._stopTimer();
+      this.props.period_finish();
+    } else {
+      this.setState(new_state);
+    }
   }
 
   render () {
-    return Time({total_seconds: this.state.elapsed_seconds});
+    return Time({total_seconds: this.props.countdown_to - this.state.elapsed_seconds});
   }
 }
 
-Timer.propTypes = {
+CountdownTimer.propTypes = {
   start_time: PropTypes.object,
-  period: PropTypes.object,
+  countdown_to: PropTypes.number,
   elapsed_seconds: PropTypes.number,
   time_offset_in_seconds: PropTypes.number,
-  timer_state: PropTypes.string.isRequired
+  timer_state: PropTypes.string.isRequired,
+  period_finish: PropTypes.func.isRequired
 };
 
-let MappedTimer = connect(mapStateToProps)(Timer);
+const MappedCountdownTimer = connect(mapStateToProps, null, mergeProps)(CountdownTimer);
 
-export default MappedTimer;
+export default MappedCountdownTimer;

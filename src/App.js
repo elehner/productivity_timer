@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Timer from './containers/Timer';
+import CountdownTimer from './containers/CountdownTimer';
 import ControlButtons from './containers/ControlButtons';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -23,7 +23,7 @@ class App extends Component {
         <Grid container spacing={24} justify='center'>
           <Grid item xs={12}>
             <Typography align='center' type="display3" >
-              <Timer />
+              <CountdownTimer />
             </Typography>
             <ControlButtons />
           </Grid>

@@ -1,18 +1,24 @@
-import { PLAY, PAUSE, STOP, PERIOD_FINISH } from './actions.js';
+import { PLAY, PAUSE, STOP, PERIOD_FINISH, TIMER_SETTINGS_UPDATE } from './actions.js';
 
 export const INITIAL_STATE = {
   time_offset: 0,
-  state: STOP,
-  period: {
-    interval: 0,
-    length: 25,
-    break_length: 5,
+  timer_state: STOP,
+  current_period: {
+    interval: 1,
+    break: false
+  },
+  timer_settings: {
+    total_intervals: 8,
+    length: 3,
+    break_length: 3,
     long_break_interval: 4,
-    long_break_length: 15,
+    long_break_length: 15*60,
   },
 };
 
 export function reducer(state = INITIAL_STATE, action) {
+  let current_interval = state.current_period.interval;
+  let break_status = !state.current_period.break;
   switch (action.type) {
   case PLAY:
     return Object.assign({}, state, {
@@ -33,9 +39,13 @@ export function reducer(state = INITIAL_STATE, action) {
     });
   case PERIOD_FINISH:
     return Object.assign({}, state, {
-      start_time: undefined,
-      period: action.period
+      start_time: action.start_time,
+      current_period: {
+        interval: break_status ? current_interval : current_interval + 1,
+        break: break_status
+      }
     });
+  case TIMER_SETTINGS_UPDATE:
   default:
     return state;
   }

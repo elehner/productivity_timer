@@ -6,7 +6,7 @@ export const PLAY = 'PLAY';
 export const PAUSE = 'PAUSE';
 export const STOP = 'STOP';
 export const PERIOD_FINISH = 'PERIOD_FINISH';
-export const PERIOD_UPDATE = 'PERIOD_UPDATE';
+export const TIMER_SETTINGS_UPDATE = 'TIMER_SETTINGS_UPDATE';
 
 /*
  * action creators
@@ -26,6 +26,6 @@ export function stop() {
 }
 
 /* Period controls */
-export function period_update(elapsed_time, next_period) {
-  return { type: PAUSE, elapsed_time, next_period };
+export function period_finish(start_time) {
+  return { type: PERIOD_FINISH, start_time };
 }

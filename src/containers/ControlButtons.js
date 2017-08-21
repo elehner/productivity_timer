@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { PLAY, PAUSE, play, pause, stop } from '../actions';
 import { connect } from 'react-redux';
-import Button from 'material-ui/Button';
+import { play, pause, stop } from '../actions';
+import TimerControls from '../components/TimerControls';
 
 const mapStateToProps = state => {
   return {
@@ -33,62 +32,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return Object.assign(mergedProps, stateProps, ownProps);
 };
 
-class ControlButtons extends Component {
-  constructor (props) {
-    super(props);
-  }
 
-  // Selects which component to render based on the given props
-  componentToPopulate() {
-    switch(this.props.timer_state) {
-    case PLAY:
-      return (
-        <div>
-          <Button
-            raised color="primary"
-            onClick={this.props.pauseHandler}
-          >Pause</Button>
-          <Button
-            raised color="accent"
-            onClick={this.props.stopHandler}
-          >Stop</Button>
-        </div>
-      );
-    case PAUSE:
-      return (
-        <div>
-          <Button
-            raised color="primary"
-            onClick={this.props.startHandler}
-          >Resume</Button>
-          <Button
-            raised color="accent"
-            onClick={this.props.stopHandler}
-          >Stop</Button>
-        </div>
-      );
-    default:
-      return (
-        <div>
-          <Button
-            raised color="primary"
-            onClick={this.props.startHandler}
-          >Start</Button>
-        </div>
-      );
-    }
-  }
+const ControlButtons = connect(mapStateToProps, null, mergeProps)(TimerControls);
 
-  render () {
-    let component = this.componentToPopulate();
-    return(
-      <div>
-        {component}
-      </div>
-    );
-  }
-}
-
-let MappedControlButtons = connect(mapStateToProps, null, mergeProps)(ControlButtons);
-
-export default MappedControlButtons;
+export default ControlButtons;
