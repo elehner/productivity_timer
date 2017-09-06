@@ -9,11 +9,11 @@ export const INITIAL_STATE = {
   },
   timer_settings: {
     total_intervals: 8,
-    length: 3,
-    break_length: 3,
+    length: 25*60,
+    break_length: 25*60,
     long_break_interval: 4,
     long_break_length: 15*60,
-  },
+  }
 };
 
 export function reducer(state = INITIAL_STATE, action) {

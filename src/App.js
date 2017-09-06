@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import CountdownTimer from './containers/CountdownTimer';
 import ControlButtons from './containers/ControlButtons';
+import Header from './containers/Header.js';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -22,6 +23,7 @@ class App extends Component {
         </AppBar>
         <Grid container spacing={24} justify='center'>
           <Grid item xs={12}>
+            <Header />
             <Typography align='center' type="display3" >
               <CountdownTimer />
             </Typography>
