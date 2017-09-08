@@ -84,7 +84,7 @@ class Timer extends Component {
     this.setState(new_state);
   }
 
-  render () {
+  render() {
     return Time({total_seconds: this.state.elapsed_seconds});
   }
 }
@@ -97,6 +97,6 @@ Timer.propTypes = {
   timer_state: PropTypes.string.isRequired
 };
 
-let MappedTimer = connect(mapStateToProps)(Timer);
+const MappedTimer = connect(mapStateToProps)(Timer);
 
 export default MappedTimer;

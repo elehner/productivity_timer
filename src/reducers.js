@@ -1,4 +1,4 @@
-import { PLAY, PAUSE, STOP, PERIOD_FINISH, TIMER_SETTINGS_UPDATE } from './actions.js';
+import { PLAY, PAUSE, STOP, PERIOD_FINISH, TIMER_SETTINGS_UPDATE, NOTIFICATION_SETTING_UPDATE } from './actions';
 
 export const INITIAL_STATE = {
   time_offset: 0,
@@ -10,10 +10,11 @@ export const INITIAL_STATE = {
   timer_settings: {
     total_intervals: 8,
     length: 25*60,
-    break_length: 25*60,
+    break_length: 5*60,
     long_break_interval: 4,
     long_break_length: 15*60,
-  }
+  },
+  notification_on: false
 };
 
 export function reducer(state = INITIAL_STATE, action) {
@@ -35,16 +36,26 @@ export function reducer(state = INITIAL_STATE, action) {
     return Object.assign({}, state, {
       start_time: undefined,
       time_offset: 0,
-      timer_state: STOP
+      timer_state: STOP,
+      current_period: {
+        interval: 0,
+        break: false
+      }
     });
   case PERIOD_FINISH:
     return Object.assign({}, state, {
       start_time: action.start_time,
+      time_offset: 0,
       current_period: {
         interval: break_status ? current_interval : current_interval + 1,
         break: break_status
       }
     });
+  case NOTIFICATION_SETTING_UPDATE:
+    return Object.assign({}, state, {
+      notification_on: action.setting
+    });
+
   case TIMER_SETTINGS_UPDATE:
   default:
     return state;
